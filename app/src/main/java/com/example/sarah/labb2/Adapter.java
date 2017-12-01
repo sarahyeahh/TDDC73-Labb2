@@ -6,17 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by Sarah on 2017-11-23.
- */
 
 //  notifyDataSetChanged();
 
@@ -26,11 +19,9 @@ public class Adapter extends BaseExpandableListAdapter {
     private HashMap<String, List<String>> listHash;
 
     public Adapter(Context context, List<String> listDataTitle, HashMap<String, List<String>> listHash){
-
         this.context = context;
         this.listDataTitle = listDataTitle;
         this.listHash = listHash;
-
     }
 
     @Override
@@ -78,8 +69,6 @@ public class Adapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.list_parent, null);
         }
 
-
-
         TextView title = (TextView)view.findViewById(R.id.title);
         title.setTypeface(null, Typeface.BOLD);
         title.setText(hTitle);
@@ -96,12 +85,6 @@ public class Adapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_child, null);
         }
-      /*  else{
-            ExpandableListView elv = new ExpandableListView(context);
-            elv.setAdapter(new SecondAdapter(context, listDataTitle, listHash));
-
-        }*/
-
 
         TextView child = (TextView)view.findViewById(R.id.child);
         child.setTypeface(null, Typeface.BOLD);
@@ -114,9 +97,5 @@ public class Adapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int i, int i1) {
         return true;
     }
-
-
-
-
 
 }

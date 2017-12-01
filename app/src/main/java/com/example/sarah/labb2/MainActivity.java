@@ -1,42 +1,27 @@
 package com.example.sarah.labb2;
-        import android.app.Activity;
-        import android.content.Context;
-        import android.graphics.Color;
-        import android.os.Bundle;
-        import android.text.Editable;
-        import android.text.TextWatcher;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.AdapterView;
-        import android.widget.EditText;
-        import android.widget.ExpandableListView;
-        import android.widget.ExpandableListView.OnChildClickListener;
-        import android.widget.TextView;
-        import android.widget.Toast;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
-
-
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 
 
 public class MainActivity extends Activity {
 
     private ExpandableListView elw;
     private Adapter listAdapter;
-   // private SecondAdapter secondAdapter;
     private List<String> listDataTitle, parentA, parentB, parentC, parentD;
-
     private HashMap<String, List<String>> listHash;
     private EditText edit;
-
-
-   // private HashMap<String, HashMap<String, List<String>>> newHash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,52 +29,35 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         edit = (EditText) findViewById(R.id.editText);
-
         elw = (ExpandableListView) findViewById(R.id.expandableListView);
         addData();
-
         listAdapter = new Adapter(this, listDataTitle, listHash);
+
         elw.setAdapter(listAdapter);
-
-      // secondAdapter = new SecondAdapter(this, listDataChild, newHash);
-      //  elw.setAdapter(secondAdapter);
-
-       // elw.setOnGroupClickListener((ExpandableListView.OnGroupClickListener) this);
-
-
-getText();
-
-
 
         elw.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 Log.d("onGroupClick:", "worked");
-              //  parent.expandGroup(groupPosition);
 
-                //EditText edit = (EditText) findViewById(R.id.editText);
                 edit.setText("/" + listDataTitle.get(groupPosition));
-
-                v.setBackgroundColor(Color.GRAY);
 
                 return false;
             }
 
         });
 
-
         elw.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
                 Log.d("onChildClick:", "worked");
                 edit.setText("/" + listDataTitle.get(groupPosition)+ "/" +  parent.getExpandableListAdapter().getChild(groupPosition, childPosition));
-                v.setBackgroundColor(Color.GRAY);
-                return true;
+
+                return false;
+               // int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
+                //parent.setItemChecked(index, true); //Markera
+               // parent.setItemChecked(index, false); //Avmarkera
             }
-
-
-
         });
 
         edit.addTextChangedListener(new TextWatcher() {
@@ -101,26 +69,73 @@ getText();
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
-                //Search
+                String newText = edit.getText().toString();
+                StringTokenizer st = new StringTokenizer(newText,"/");
 
-                for(int i = 0; i < listDataTitle.size(); i++){
+                //parent
+                if(st.countTokens() == 1){
 
-                    if (listDataTitle.get(i).contains(charSequence)){
-                        //Markera de som stämmer in
-                       /* Toast toast =  Toast.makeText(MainActivity.this, listDataTitle.get(i), Toast.LENGTH_SHORT);
-                        toast.show();*/
-                       TextView text = findViewById(R.id.title);
-                       text.setTextColor(Color.RED);
-                       Log.d("Onwrite:", "worked");
+                    //Expandera alla parent som matchar
+                    Log.d("Count tokens", "1");
+                    int i = 0;
 
+                    while(st.hasMoreTokens()){
 
+                        String inputword = st.nextToken();
+
+                        if(inputword.equals(listDataTitle.get(i))){
+
+                            Toast toast =  Toast.makeText(MainActivity.this, listDataTitle.get(i), Toast.LENGTH_SHORT);
+                            toast.show();
+                            elw.expandGroup(i);
+
+                            //  int index = elw.getFlatListPosition(ExpandableListView.getPackedPositionForGroup(i));
+                            //elw.setItemChecked(index, true); //Markera
+                            // elw.setItemChecked(index, false); //Avmarkera
+                        }
+                        //Avmarkera alla
+                        else{
+                           // elw.getChi
+                        }
+
+                        i++;
                     }
-                    else{
-                        //Leta genom child.
+
+                }
+                //child
+                else if(st.countTokens() == 2){
+
+                    Log.d("Count tokens", "2");
+                    int i = 0;
+
+                    while(st.hasMoreTokens()){
+
+                        String word = st.nextToken();
+
+                        //Markera alla som stämmer
+                        if(word.equals(listDataTitle.get(i))){
+
+                            for(int j = 0; j < 2; j++){
+                                System.out.println(j);
+                               // int child  =  elw.getExpandableListAdapter().getChild(i, j);
+                                //Toast toast =  Toast.makeText(MainActivity.this, i, Toast.LENGTH_SHORT);
+                                //toast.show();
+                            }
+                            Toast toast =  Toast.makeText(MainActivity.this, listDataTitle.get(i), Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                        //Avmarkera alla.
+                        else{
+
+                        }
+                        i++;
                     }
                 }
-
-
+                //Other
+                else{
+                    //Expandera inte
+                    Log.d("Count tokens", "annat/0");
+                }
             }
 
             @Override
@@ -128,35 +143,13 @@ getText();
 
             }
         });
-
-
-/*
-        elw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                //do react to click do not change the ui without change the model/adapter
-                Toast.makeText(MainActivity.this, "You clicked:"+ listAdapter.getGroup(i), Toast.LENGTH_SHORT).show();
-                Log.v("Data", "You clicked");
-            }*/
-
-          /*
-          @Override
-          public boolean onGroupClick(ExpandableListView elw, View view, int i, long id){
-
-              Toast.makeText("Hej").show();
-              return true;
-
-          }
-        });
-
-*/
-
     }
 
     private void addData(){
         listDataTitle = new ArrayList<>();
         listHash = new HashMap<>();
 
+        //Add parents
         listDataTitle.add("parentA");
         listDataTitle.add("parentB");
         listDataTitle.add("parentC");
@@ -178,22 +171,9 @@ getText();
         parentD.add("childC");
         parentD.add("childC2");
 
-
-
-
         listHash.put(listDataTitle.get(0), parentA);
         listHash.put(listDataTitle.get(1), parentB);
         listHash.put(listDataTitle.get(2), parentC);
         listHash.put(listDataTitle.get(3), parentD);
-
-
      }
-
-    public String getText(){
-
-        String text = (String) edit.getText().toString();
-       // Toast toast =  Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT);
-      //  toast.show();
-        return text;
-    }
 }
