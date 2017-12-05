@@ -69,6 +69,7 @@ public class Adapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.list_parent, null);
         }
 
+
         TextView title = (TextView)view.findViewById(R.id.title);
         title.setTypeface(null, Typeface.BOLD);
         title.setText(hTitle);

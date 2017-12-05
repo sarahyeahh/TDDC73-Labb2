@@ -1,0 +1,111 @@
+public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+                String newText = edit.getText().toString();
+                StringTokenizer st = new StringTokenizer(newText,"/");
+
+                String Titles [] = {"parentA", "parentB", "parentC", "parentD"};
+                String Childs [] ={"childA", "childB", "childB2", "childB3", "childC", "childC2"};
+               // String ChildB [] ={"childB", "childB2", "childB3"};
+               // String ChildC [] ={"childC", "childC2"};
+                //String ChildD [] ={"childC", "childC2"};
+
+                //parent
+                if(st.countTokens() == 1){
+
+                    //Expandera alla parent som matchar
+                    Log.d("Count tokens", "1");
+
+                   // while(st.hasMoreTokens()){
+
+                        String inputword = st.nextToken();
+
+                        for(int i = 0; i< Titles.length; i++){
+
+                            // if(inputword.equals(listDataTitle.get(i))){
+                            if(inputword.equals(Titles[i])){
+
+                                // Toast toast =  Toast.makeText(MainActivity.this, listDataTitle.get(i), Toast.LENGTH_SHORT);
+                                Toast toast =  Toast.makeText(MainActivity.this, Titles[i], Toast.LENGTH_SHORT);
+                                toast.show();
+
+
+                                    elw.expandGroup(i);
+
+
+
+                                //  int index = elw.getFlatListPosition(ExpandableListView.getPackedPositionForGroup(i));
+                                //elw.setItemChecked(index, true); //Markera
+                                // elw.setItemChecked(index, false); //Avmarkera
+                            }
+                            //Avmarkera alla
+                            else{
+                                // elw.getChild
+                                elw.collapseGroup(ExpandableListView.getPackedPositionGroup(i));
+                                System.out.println("Inflate " + i);
+                            }
+                        }
+
+                   // }
+
+                }
+                //child
+                else if(st.countTokens() == 2){
+
+                    Log.d("Count tokens", "2");
+
+                    String inputword = st.nextToken();
+                    System.out.println("Inputword " +inputword);
+
+                    if(Titles.length == 0){
+                        System.out.print("Den är noll");
+                    }
+
+                    //while(st.hasMoreTokens()){
+                    for(int i = 0; i< Titles.length; i++){
+
+                        //Markera alla som stämmer
+                        //if(word.equals(listDataTitle.get(i))){
+                        if(inputword.equals(Titles[i])){
+
+                            //String inputword2 = st.nextToken();
+                           // System.out.println("Inputword2 " + inputword2);
+
+                            String inputword2 = st.nextToken();
+                            System.out.println("Inputword2 " + inputword2);
+
+                            for(int j = 0; j < Childs.length; j++){
+
+                                if(inputword2.equals(Childs[j])){
+                                    Toast toast =  Toast.makeText(MainActivity.this, Childs[j], Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+
+                            }
+
+                            //parent.getExpandableListAdapter().getChild(groupPosition, childPosition)
+                            //Toast toast =  Toast.makeText(MainActivity.this, listDataTitle.get(i), Toast.LENGTH_SHORT);
+                            //toast.show();
+                        }
+                        //Avmarkera alla.
+                        else{
+                            elw.collapseGroup(ExpandableListView.getPackedPositionGroup(i));
+                            System.out.println("Inflate with child " + i);
+                        }
+
+                    }
+                }
+                //Other
+                else{
+                    //Expandera inte
+                    Log.d("Count tokens", "annat/0");
+                    for(int i=0; i<Titles.length; i++) {
+                        elw.collapseGroup(i);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });

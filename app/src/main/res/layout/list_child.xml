@@ -7,7 +7,7 @@
         android:id="@+id/child"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:background="@drawable/list_selector" />
 
 </LinearLayout>
