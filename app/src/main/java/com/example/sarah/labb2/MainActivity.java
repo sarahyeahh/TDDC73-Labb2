@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 
         edit = (EditText) findViewById(R.id.editText);
         edit.getText().insert(0,"/");
+
         elw = (ExpandableListView) findViewById(R.id.expandableListView);
         addData();
         listAdapter = new Adapter(this, listDataTitle, listHash);
@@ -41,17 +42,12 @@ public class MainActivity extends Activity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 Log.d("onGroupClick:", "worked");
-
-
                 edit.setText(listDataTitle.get(groupPosition));
                 //fråga***
                 edit.getText().insert(0,"/");
-
                 listAdapter.notifyDataSetChanged();
-
                 return true;
             }
-
         });
 
         elw.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -72,8 +68,6 @@ public class MainActivity extends Activity {
                 //parent.setItemChecked(index, true); //Markera
                // parent.setItemChecked(index, false); //Avmarkera
             }
-
-
         });
 
         //When group collapse
@@ -96,7 +90,18 @@ public class MainActivity extends Activity {
                     elw.collapseGroup(previousItem);
                     previousItem = i;
 
+                    System.out.println("Inte like med previous " + i);
+
                     listAdapter.notifyDataSetChanged();
+
+                }
+                else if(i == previousItem){
+                   // elw.collapseGroup(i);
+                    //elw.clearChoices();
+                    //listAdapter.notifyDataSetChanged();
+                    //listAdapter.notifyDataSetInvalidated();
+
+                    System.out.println("Stäng " + i);
                 }
             }
         });
@@ -111,62 +116,72 @@ public class MainActivity extends Activity {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
                 String newText = edit.getText().toString();
-
                 StringTokenizer st = new StringTokenizer(newText,"/");
 
-                String Titles [] = {"parentA", "parentB", "parentC", "parentD"};
-                String Childs [] ={"childA", "childB", "childB2", "childB3", "childC", "childC2"};
-               // String ChildB [] ={"childB", "childB2", "childB3"};
-               // String ChildC [] ={"childC", "childC2"};
-                //String ChildD [] ={"childC", "childC2"};
+                //String Titles [] = {"parentA", "parentB", "parentC", "parentD"};
+                //String Childs [] ={"childA", "childB", "childB2", "childB3", "childC", "childC2"};
 
                 if(st.countTokens()==0 || newText == ""){
                  //Alla ska vara inflateade
                     System.out.print("Alla ska vara inflateade.");
+
                     //fråga***
                     //edit.getText().insert(0,"/");
 
-                    for(int i = 0; i<Titles.length; i++){
+                    for(int i = 0; i<listDataTitle.size(); i++){
                         elw.collapseGroup(i);
                         elw.setItemChecked(i, false);
                     }
-
                     //fråga***
-                    edit.setBackgroundColor(Color.WHITE);
+                   // edit.setBackgroundColor(Color.WHITE);
                 }
                 else if(st.countTokens()==1){
                     //Antingen skrivit eller tryckt
+                    String inputword =  st.nextToken().toLowerCase();
 
-                    String inputword =  st.nextToken();
+                   // edit.setBackgroundColor(Color.WHITE);
 
-                    edit.setBackgroundColor(Color.WHITE);
+                    for(int i = 0; i < listDataTitle.size(); i++){
 
-                    for(int i = 0; i < Titles.length; i++){
+                        for(int j=0; j< inputword.length(); j++){
 
-                        if(inputword.equals(Titles[i])){
-                            edit.setBackgroundColor(Color.WHITE);
-                            elw.setItemChecked(i, true);
-                            elw.expandGroup(i);
-                            listAdapter.notifyDataSetChanged();
+                            String temp = listDataTitle.get(i).toLowerCase();
+
+                            System.out.println("String temp " + temp);
+                            System.out.println("inputword " + inputword);
+
+                            if(inputword.equals(listDataTitle.get(i))){
+                                System.out.println("Hela ordet är " + listDataTitle.get(i));
+                            }
+                            else if(inputword.charAt(j) == temp.charAt(j)){
+                                System.out.println("Inputword lika med char: " + inputword.charAt(j) + " - " + listDataTitle.get(i).charAt(j));
+                                System.out.println("i " + i + " j " + j);
+                                edit.setBackgroundColor(Color.WHITE);
+                                elw.setItemChecked(i, true);
+                                elw.expandGroup(i);
+                                listAdapter.notifyDataSetChanged();
+                            }
+                            else{
+                                //Collapse all and set bg-color to red.
+                                //fråga***
+                                System.out.println("Nu ska bakgrunden bli röd");
+                                //elw.setItemChecked(i, false);
+                                edit.setBackgroundColor(Color.RED);
+                            }
+
                         }
-                        else{
-                            //Collapse all and set bg-color to red.
-                            //fråga***
-                            edit.setBackgroundColor(Color.RED);
-                        }
-
+                        //fråga***
+                        //edit.setBackgroundColor(Color.WHITE);
                     }
-                    //fråga***
-                    edit.setBackgroundColor(Color.WHITE);
                 }
                 else if(st.countTokens()==2){
                     //Antingen skrivit 2 eller tryckt 2
 
                     String inputword =  st.nextToken();
 
-                    for(int i = 0; i < Titles.length; i++){
+                    for(int i = 0; i < listDataTitle.size(); i++){
 
-                        if(inputword.equals(Titles[i])){
+                        if(inputword.equals(listDataTitle.get(i))){
                             edit.setBackgroundColor(Color.WHITE);
                             elw.setItemChecked(i, true);
                             elw.expandGroup(i);
@@ -192,30 +207,24 @@ public class MainActivity extends Activity {
                                 }
                                 else{
                                     //fråga***
-                                   edit.setBackgroundColor(Color.RED);
+                                 //  edit.setBackgroundColor(Color.RED);
                                 }
                             }
                             //fråga***
-                            edit.setBackgroundColor(Color.WHITE);
+                           edit.setBackgroundColor(Color.RED);
 
                         }
                         else{
                             //Collapse all and set bg-color to red.
-                            edit.setBackgroundColor(Color.WHITE);
-
+                            // edit.setBackgroundColor(Color.WHITE);
                         }
-
                     }
-
-
                 }
-
                 listAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
                 listAdapter.notifyDataSetChanged();
             }
         });
@@ -226,26 +235,26 @@ public class MainActivity extends Activity {
         listHash = new HashMap<>();
 
         //Add parents
-        listDataTitle.add("parentA");
-        listDataTitle.add("parentB");
-        listDataTitle.add("parentC");
-        listDataTitle.add("parentD");
+        listDataTitle.add("abc");
+        listDataTitle.add("def");
+        listDataTitle.add("ghi");
+        listDataTitle.add("jkl");
 
         parentA = new ArrayList<>();
-        parentA.add("childA");
+        parentA.add("a");
 
         parentB = new ArrayList<>();
-        parentB.add("childB");
-        parentB.add("childB2");
-        parentB.add("childB3");
+        parentB.add("b");
+        parentB.add("c");
+        parentB.add("d");
 
         parentC = new ArrayList<>();
-        parentC.add("childC");
-        parentC.add("childC2");
+        parentC.add("c");
+        parentC.add("d");
 
         parentD = new ArrayList<>();
-        parentD.add("childC");
-        parentD.add("childC2");
+        parentD.add("e");
+        parentD.add("f");
 
         listHash.put(listDataTitle.get(0), parentA);
         listHash.put(listDataTitle.get(1), parentB);

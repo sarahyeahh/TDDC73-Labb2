@@ -67,6 +67,7 @@ public class Adapter extends BaseExpandableListAdapter {
         {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_parent, null);
+
         }
 
 
