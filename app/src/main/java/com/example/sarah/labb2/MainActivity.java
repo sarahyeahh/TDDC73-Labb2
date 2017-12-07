@@ -64,9 +64,6 @@ public class MainActivity extends Activity {
                 System.out.println("Group "+ groupPosition + " Child "+ childPosition);
 
                 return true;
-               // int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
-                //parent.setItemChecked(index, true); //Markera
-               // parent.setItemChecked(index, false); //Avmarkera
             }
         });
 
@@ -90,7 +87,7 @@ public class MainActivity extends Activity {
                     elw.collapseGroup(previousItem);
                     previousItem = i;
 
-                    System.out.println("Inte like med previous " + i);
+                   // System.out.println("Inte like med previous " + i);
 
                     listAdapter.notifyDataSetChanged();
 
@@ -101,7 +98,7 @@ public class MainActivity extends Activity {
                     //listAdapter.notifyDataSetChanged();
                     //listAdapter.notifyDataSetInvalidated();
 
-                    System.out.println("Stäng " + i);
+                    //System.out.println("Stäng " + i);
                 }
             }
         });
@@ -115,116 +112,95 @@ public class MainActivity extends Activity {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
                 String newText = edit.getText().toString();
                 StringTokenizer st = new StringTokenizer(newText,"/");
+                edit.setBackgroundColor(Color.RED);
 
-                //String Titles [] = {"parentA", "parentB", "parentC", "parentD"};
-                //String Childs [] ={"childA", "childB", "childB2", "childB3", "childC", "childC2"};
+                boolean found = false;
 
-                if(st.countTokens()==0 || newText == ""){
-                 //Alla ska vara inflateade
-                    System.out.print("Alla ska vara inflateade.");
-
-                    //fråga***
-                    //edit.getText().insert(0,"/");
+                if(st.countTokens() == 0 || newText == "/" || newText == ""){
 
                     for(int i = 0; i<listDataTitle.size(); i++){
                         elw.collapseGroup(i);
                         elw.setItemChecked(i, false);
                     }
-                    //fråga***
-                   // edit.setBackgroundColor(Color.WHITE);
+
+                    edit.setBackgroundColor(Color.WHITE);
+                    listAdapter.notifyDataSetChanged();
+                    found = true;
+
                 }
-                else if(st.countTokens()==1){
-                    //Antingen skrivit eller tryckt
+                else if(st.countTokens() == 1){
+
+                    System.out.println("newText " + newText + " st " + st + "count: " + st.countTokens());
+
                     String inputword =  st.nextToken().toLowerCase();
 
-                   // edit.setBackgroundColor(Color.WHITE);
+                    for(int i = 0; i < 4; i++){
 
-                    for(int i = 0; i < listDataTitle.size(); i++){
-
-                        for(int j=0; j< inputword.length(); j++){
-
-                            String temp = listDataTitle.get(i).toLowerCase();
-
-                            System.out.println("String temp " + temp);
-                            System.out.println("inputword " + inputword);
-
-                            if(inputword.equals(listDataTitle.get(i))){
-                                System.out.println("Hela ordet är " + listDataTitle.get(i));
-                            }
-                            else if(inputword.charAt(j) == temp.charAt(j)){
-                                System.out.println("Inputword lika med char: " + inputword.charAt(j) + " - " + listDataTitle.get(i).charAt(j));
-                                System.out.println("i " + i + " j " + j);
-                                edit.setBackgroundColor(Color.WHITE);
-                                elw.setItemChecked(i, true);
-                                elw.expandGroup(i);
-                                listAdapter.notifyDataSetChanged();
-                            }
-                            else{
-                                //Collapse all and set bg-color to red.
-                                //fråga***
-                                System.out.println("Nu ska bakgrunden bli röd");
-                                //elw.setItemChecked(i, false);
-                                edit.setBackgroundColor(Color.RED);
-                            }
+                        if(listDataTitle.get(i).startsWith(inputword)){
+                            edit.setBackgroundColor(Color.WHITE);
+                            elw.setItemChecked(i, true);
+                            elw.expandGroup(i);
+                            listAdapter.notifyDataSetChanged();
+                            found = true;
+                            break;
 
                         }
-                        //fråga***
-                        //edit.setBackgroundColor(Color.WHITE);
+                        else{
+                            found = false;
+                            continue;
+                        }
                     }
+
                 }
                 else if(st.countTokens()==2){
-                    //Antingen skrivit 2 eller tryckt 2
 
-                    String inputword =  st.nextToken();
+                    String inputword =  st.nextToken().toLowerCase();
 
-                    for(int i = 0; i < listDataTitle.size(); i++){
+                    for(int i = 0; i < 4; i++){
+
 
                         if(inputword.equals(listDataTitle.get(i))){
                             edit.setBackgroundColor(Color.WHITE);
                             elw.setItemChecked(i, true);
                             elw.expandGroup(i);
 
-                            String inputword2 = st.nextToken();
-                            System.out.println("Inputword2 " + inputword2);
-
+                            String nextInputword =  st.nextToken().toLowerCase();
                             int childrenCount = listAdapter.getChildrenCount(i);
-                            long groupId = listAdapter.getGroupId(i);
-                            System.out.println("Children count " + childrenCount + " GroupId " + groupId);
+                            List<String> childrenList = listHash.get(listDataTitle.get(i));
 
-                            List<String> strings = listHash.get(listDataTitle.get(i));
+                            for(int j = 0; j < childrenCount; j++ ){
 
-                            for(int j = 0; j < childrenCount; j++){
-
-                                if(inputword2.equals(strings.get(j))){
+                                if(childrenList.get(j).startsWith(nextInputword)) {
                                     edit.setBackgroundColor(Color.WHITE);
                                     int check = j + i + 1;
                                     elw.setItemChecked(check, true);
-
-                                    System.out.println( "String get " + strings.get(j));
                                     listAdapter.notifyDataSetChanged();
+                                    found = true;
+                                    break;
                                 }
                                 else{
-                                    //fråga***
-                                 //  edit.setBackgroundColor(Color.RED);
+                                    found = false;
+                                    continue;
                                 }
                             }
-                            //fråga***
-                           edit.setBackgroundColor(Color.RED);
 
                         }
-                        else{
-                            //Collapse all and set bg-color to red.
-                            // edit.setBackgroundColor(Color.WHITE);
-                        }
+
                     }
-                }
-                listAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
+                }
+
+                if(!found){
+                    edit.setBackgroundColor(Color.RED);
+                }
+
                 listAdapter.notifyDataSetChanged();
             }
         });
