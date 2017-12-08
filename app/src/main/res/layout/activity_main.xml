@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- TDDC73 labb2, sarfo265 och malwe794 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,6 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- Search field -->
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
@@ -19,6 +21,7 @@
             android:inputType="textPersonName"
             android:text="" />
 
+        <!-- Expandable list view with single choice mode -->
         <ExpandableListView
             android:id="@+id/expandableListView"
             android:layout_width="match_parent"

@@ -1,3 +1,6 @@
+//TDDC73 labb2
+//sarfo265 och malwe794
+
 package com.example.sarah.labb2;
 
 import android.content.Context;
@@ -11,13 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 
 
-//  notifyDataSetChanged();
-
 public class Adapter extends BaseExpandableListAdapter {
+
+    //Variables
     private Context context;
     private List<String> listDataTitle;
     private HashMap<String, List<String>> listHash;
 
+    //Constructor for the Adapter
     public Adapter(Context context, List<String> listDataTitle, HashMap<String, List<String>> listHash){
         this.context = context;
         this.listDataTitle = listDataTitle;
@@ -63,14 +67,14 @@ public class Adapter extends BaseExpandableListAdapter {
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         String hTitle = (String)getGroup(i);
 
+        //Inflate group
         if(view==null)
         {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_parent, null);
-
         }
 
-
+        //Set the title to the parent node
         TextView title = (TextView)view.findViewById(R.id.title);
         title.setTypeface(null, Typeface.BOLD);
         title.setText(hTitle);
@@ -82,12 +86,14 @@ public class Adapter extends BaseExpandableListAdapter {
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         String cText = (String)getChild(i, i1);
 
+        //Inflate group with a child
         if(view==null)
         {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_child, null);
         }
 
+        //Set the title to the children node
         TextView child = (TextView)view.findViewById(R.id.child);
         child.setTypeface(null, Typeface.BOLD);
         child.setText(cText);
