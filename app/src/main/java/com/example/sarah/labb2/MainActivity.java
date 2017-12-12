@@ -50,8 +50,7 @@ public class MainActivity extends Activity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 //Print parent-node in editText
-                edit.setText(listDataTitle.get(groupPosition));
-                edit.getText().insert(0,"/");
+                edit.setText('/' + listDataTitle.get(groupPosition));
                 listAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -62,8 +61,7 @@ public class MainActivity extends Activity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 //Print parent and child-node in editText
-                edit.setText(listDataTitle.get(groupPosition)+ '/' +  parent.getExpandableListAdapter().getChild(groupPosition, childPosition));
-                edit.getText().insert(0,"/");
+                edit.setText('/' + listDataTitle.get(groupPosition)+ '/' +  parent.getExpandableListAdapter().getChild(groupPosition, childPosition));
                 listAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -109,19 +107,26 @@ public class MainActivity extends Activity {
                 edit.setBackgroundColor(Color.RED);
                 boolean found = false;
 
-                //If the editText empty
-                if(st.countTokens() == 0 || newText == "/" || newText == ""){
+                int groupCount = listAdapter.getGroupCount();
+
+                //If the editText is empty
+                if(!newText.startsWith("/")){
+                    edit.setText("/");
+                }
+                //If the editText contains no word
+                if(st.countTokens() == 0 ){
 
                     //Collapse all groups and deselect all
-                    for(int i = 0; i<listDataTitle.size(); i++){
+                    for(int i = 0; i < groupCount; i++){
                         elw.collapseGroup(i);
                         elw.setItemChecked(i, false);
                     }
 
                     //Set background to white.
                     edit.setBackgroundColor(Color.WHITE);
-                    listAdapter.notifyDataSetChanged();
                     found = true;
+                    listAdapter.notifyDataSetChanged();
+
                 }
                 //If editText contains one word
                 else if(st.countTokens() == 1){
@@ -129,7 +134,7 @@ public class MainActivity extends Activity {
                     //Get the first token
                     String inputword =  st.nextToken().toLowerCase();
 
-                    for(int i = 0; i < 4; i++){
+                    for(int i = 0; i < groupCount; i++){
 
                         //If editText begins with the same letters as a parent
                         //Expand group and select.
@@ -152,7 +157,7 @@ public class MainActivity extends Activity {
 
                     String inputword =  st.nextToken().toLowerCase();
 
-                    for(int i = 0; i < 4; i++){
+                    for(int i = 0; i < groupCount; i++){
 
                         //If editText equals a parent
                         if(inputword.equals(listDataTitle.get(i).toLowerCase())){
@@ -165,6 +170,7 @@ public class MainActivity extends Activity {
 
                             //Get all the children from the current parent
                             int childrenCount = listAdapter.getChildrenCount(i);
+
                             List<String> childrenList = listHash.get(listDataTitle.get(i));
 
                             for(int j = 0; j < childrenCount; j++ ){
